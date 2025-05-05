@@ -19,13 +19,24 @@ namespace UnicardSync
             // SQLiteデータベースの初期化
             string dbFileName = "database.db";
             string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbFileName);
+            bool isNewDatabase = !File.Exists(dbPath);
 
             string connectionString = $"Data Source={dbPath}";
 
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
-                CreateTables(connection);
+
+                if (isNewDatabase)
+                {
+                    Console.WriteLine("データベースが存在しないため、新規作成します...");
+                    CreateTables(connection);
+                    InsertSampleRecords(connection);
+                }
+                else
+                {
+                    Console.WriteLine("既存のデータベースを使用します。");
+                }
             }
 
             Application.EnableVisualStyles();
@@ -67,6 +78,39 @@ namespace UnicardSync
                 command.CommandText = createTableSql;
                 command.ExecuteNonQuery();
             }
+
+            Console.WriteLine("テーブルを作成しました。");
+        }
+
+        /**
+         * サンプルデータを登録するメソッド
+         * @param connection SQLite接続オブジェクト
+         */
+        private static void InsertSampleRecords(SqliteConnection connection)
+        {
+            var insertCmd = connection.CreateCommand();
+            insertCmd.CommandText = @"
+                INSERT INTO torikomi(file_name, torikomi_type)
+                VALUES ($fileName, $torikomiType);
+                SELECT last_insert_rowid();
+            ";
+            insertCmd.Parameters.AddWithValue("$fileName", "test.csv");
+            insertCmd.Parameters.AddWithValue("$torikomiType", "テストカード");
+            long torikomiID = (long)insertCmd.ExecuteScalar();
+
+            var insertCmd2 = connection.CreateCommand();
+            insertCmd2.CommandText = @"
+                INSERT INTO used(place_used, amount_used, date_used, note, torikomi_id)
+                VALUES($placeUsed, $amountUsed, $dateUsed, $note, $torikomiID);
+            ";
+            insertCmd2.Parameters.AddWithValue("$placeUsed", "テストストア");
+            insertCmd2.Parameters.AddWithValue("$amountUsed", 10000);
+            insertCmd2.Parameters.AddWithValue("$dateUsed", "2025/05/05 15:00:00");
+            insertCmd2.Parameters.AddWithValue("$note", "備考");
+            insertCmd2.Parameters.AddWithValue("$torikomiID", torikomiID);
+            insertCmd2.ExecuteNonQuery();
+
+            Console.WriteLine("サンプルデータを登録しました。");
         }
     }
 }
