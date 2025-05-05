@@ -137,6 +137,11 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)\packages\SQLitePCLRaw.lib.e_sqlite3.2.1.11\runtimes" "$(TargetDir)\runtimes" /s /Y</PostBuildEvent>
+    <PostBuildEvent>rd /s /q $(TargetDir)runtimes
+rd /s /q $(TargetDir)config
+mkdir $(TargetDir)runtimes
+xcopy "$(ProjectDir)\packages\SQLitePCLRaw.lib.e_sqlite3.2.1.11\runtimes" "$(TargetDir)\runtimes" /s /Y
+mkdir $(TargetDir)config
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
