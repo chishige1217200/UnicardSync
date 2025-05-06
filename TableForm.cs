@@ -16,5 +16,13 @@ namespace UnicardSync
         {
             InitializeComponent();
         }
+
+        private void TableForm_Resize(object sender, EventArgs e)
+        {
+            Control control = (Control)sender;
+
+            this.table.Width = control.Width - 16;
+            this.table.Height = control.Height - 69;
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace UnicardSync
 {
     public class TorikomiConfigHelper
     {
-        public static TorikomiConfig[] Config { get; private set; }
+        public static List<TorikomiConfig> Config { get; private set; } = new List<TorikomiConfig>();
         public static void LoadConfig()
         {
             string configFolder = "config";
@@ -25,8 +25,6 @@ namespace UnicardSync
             }
 
             string[] configFiles = Directory.GetFiles(configFolder, "*.dat");
-
-            List<TorikomiConfig> configList = new List<TorikomiConfig>();
 
             foreach (string filePath in configFiles)
             {
@@ -40,7 +38,7 @@ namespace UnicardSync
                         TorikomiConfig config = csv.GetRecords<TorikomiConfig>().FirstOrDefault();
                         if (config != null)
                         {
-                            configList.Add(config);
+                            Config.Add(config);
                         }
                     }
                 }
@@ -49,9 +47,6 @@ namespace UnicardSync
                     Console.WriteLine("ファイル '" + filePath + "' の読み込みに失敗しました: " + ex.Message);
                 }
             }
-
-            // リストから配列へ変換
-            Config = configList.ToArray();
 
             // 出力して確認
             Console.WriteLine("読み込まれた設定:");
