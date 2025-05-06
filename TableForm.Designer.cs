@@ -1,6 +1,6 @@
 ﻿namespace UnicardSync
 {
-    partial class Form1
+    partial class TableForm
     {
         /// <summary>
         /// 必要なデザイナー変数です。
