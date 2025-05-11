@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TableForm));
             this.Table = new System.Windows.Forms.DataGridView();
             this.ExportButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
@@ -88,6 +89,7 @@
             this.Controls.Add(this.ImportButton);
             this.Controls.Add(this.ExportButton);
             this.Controls.Add(this.Table);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TableForm";
             this.Text = "UnicardSync";
             this.Resize += new System.EventHandler(this.TableForm_Resize);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -36,7 +37,28 @@ namespace UnicardSync
                 MessageBox.Show("データ取込を行う前に取込区分を選択してください。", "取込エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            //Console.WriteLine(torikomiTypeComboBox.SelectedValue.ToString());
+            // 初期選択値
+            string path = string.Empty;
+
+            // ファイル選択ダイアログ
+            using (var dlg = new CommonOpenFileDialog())
+            {
+                dlg.IsFolderPicker = false;  // true:フォルダ選択  false:ファイル選択
+
+                dlg.Filters.Add(new CommonFileDialogFilter("テキストファイル", "*.csv"));
+                dlg.Filters.Add(new CommonFileDialogFilter("すべてのファイル", "*.*"));
+                dlg.Multiselect = false;
+                dlg.Title = "ファイルを選択してください";
+
+                // ファイル選択ダイアログ表示
+                if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    // 選択値で更新
+                    path = dlg.FileName;
+                    // ファイルの読み込み
+                    MeisaiReader.ReadMeisai(path, TorikomiConfigHelper.Config[TorikomiTypeComboBox.SelectedIndex]);
+                }
+            }
         }
 
         private void ExportButton_Click(object sender, EventArgs e)

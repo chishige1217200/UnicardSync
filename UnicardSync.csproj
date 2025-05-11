@@ -112,6 +112,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MeisaiReader.cs" />
     <Compile Include="TableForm.cs">
       <SubType>Form</SubType>
     </Compile>
