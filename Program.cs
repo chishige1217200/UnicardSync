@@ -107,7 +107,7 @@ namespace UnicardSync
             ";
             insertCmd2.Parameters.AddWithValue("$placeUsed", "テストストア");
             insertCmd2.Parameters.AddWithValue("$amountUsed", 10000);
-            insertCmd2.Parameters.AddWithValue("$dateUsed", "2025/05/05 15:00:00");
+            insertCmd2.Parameters.AddWithValue("$dateUsed", "2025/05/05");
             insertCmd2.Parameters.AddWithValue("$note", "備考");
             insertCmd2.Parameters.AddWithValue("$torikomiID", torikomiID);
             insertCmd2.ExecuteNonQuery();
