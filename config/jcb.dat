@@ -1,2 +1,2 @@
-torikomi_type,encoding,skip_top_rows,skip_bottom_rows,place_used,amount_used,date_used
-JCBカード,Shift_JIS,6,1,3,4,2
+torikomi_type,encoding,skip_top_rows,skip_bottom_rows,place_used,amount_used,date_used,note
+JCBカード,Shift_JIS,6,1,3,4,2,-1

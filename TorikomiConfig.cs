@@ -55,6 +55,19 @@ namespace UnicardSync
                 Console.WriteLine("- " + cfg.TorikomiType + ", " + cfg.Encoding + ", TopSkip=" + cfg.SkipTopRows);
             }
         }
+
+        public static int getMaxColumnsIndex(TorikomiConfig config)
+        {
+            int maxColumnsIndex = 0;
+
+            // 設定されている列番号の内、最も大きい値を取得
+            if (config.PlaceUsed > maxColumnsIndex) maxColumnsIndex = config.PlaceUsed;
+            if (config.AmountUsed > maxColumnsIndex) maxColumnsIndex = config.AmountUsed;
+            if (config.DateUsed > maxColumnsIndex) maxColumnsIndex = config.DateUsed;
+            if (config.Note > maxColumnsIndex) maxColumnsIndex = config.Note;
+
+            return maxColumnsIndex;
+        }
     }
 
     public class TorikomiConfig
@@ -63,9 +76,10 @@ namespace UnicardSync
         public string Encoding { get; set; }
         public int SkipTopRows { get; set; }
         public int SkipBottomRows { get; set; }
-        public string PlaceUsed { get; set; }
-        public string AmountUsed { get; set; }
-        public string DateUsed { get; set; }
+        public int PlaceUsed { get; set; }
+        public int AmountUsed { get; set; }
+        public int DateUsed { get; set; }
+        public int Note { get; set; }
     }
 }
 
@@ -80,5 +94,6 @@ internal sealed class TorikomiConfigMap : ClassMap<TorikomiConfig>
         Map(m => m.PlaceUsed).Name("place_used");
         Map(m => m.AmountUsed).Name("amount_used");
         Map(m => m.DateUsed).Name("date_used");
+        Map(m => m.Note).Name("note");
     }
 }

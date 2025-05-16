@@ -1,2 +1,2 @@
-torikomi_type,encoding,skip_top_rows,skip_bottom_rows,place_used,amount_used,date_used
-楽天カード,UTF-8,1,1,1,4,0
+torikomi_type,encoding,skip_top_rows,skip_bottom_rows,place_used,amount_used,date_used,note
+楽天カード,UTF-8,1,1,1,4,0,-1

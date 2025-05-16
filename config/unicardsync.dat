@@ -1,2 +1,2 @@
-torikomi_type,encoding,skip_top_rows,skip_bottom_rows,place_used,amount_used,date_used
-UnicardSync,Shift_JIS,1,1,0,1,2
+torikomi_type,encoding,skip_top_rows,skip_bottom_rows,place_used,amount_used,date_used,note
+UnicardSync,Shift_JIS,1,1,0,1,2,3
