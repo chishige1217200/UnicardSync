@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,11 +12,42 @@ namespace UnicardSync
 {
     public class MeisaiReader
     {
-        public static void ReadMeisai(string fileName, TorikomiConfig config)
+        public static List<MeisaiData> ReadMeisai(string filePath, TorikomiConfig config)
         {
+
             Encoding encoding = Encoding.GetEncoding(config.Encoding);
-            List<string[]> meisai = ReadCsv(fileName, encoding);
-            PrintRecords(meisai);
+            List<string[]> csvDataList = ReadCsv(filePath, encoding);
+            PrintRecords(csvDataList);
+
+            if (csvDataList.Count <= config.SkipTopRows + config.SkipBottomRows)
+            {
+                throw new Exception("取り込みするファイルの行数が不足しています。");
+            }
+
+            if (csvDataList[config.SkipTopRows].Length < TorikomiConfigHelper.getMaxColumnsIndex(config))
+            {
+                throw new Exception("取り込みするファイルの列数が不足しています。");
+            }
+
+            List<MeisaiData> meisaiDataList = new List<MeisaiData>();
+
+            for (int i = config.SkipTopRows; i < csvDataList.Count - config.SkipBottomRows; i++)
+            {
+                meisaiDataList.Add(new MeisaiData
+                {
+                    ID = null,
+                    Place = csvDataList[i][config.PlaceUsed],
+                    Amount = long.Parse(csvDataList[i][config.AmountUsed]),
+                    Date = DateTime.Parse(csvDataList[i][config.DateUsed]),
+                    Note = config.Note != -1 ? csvDataList[i][config.Note] : "",
+                    TorikomiID = null,
+                    InsDateTime = null,
+                    UpdDateTime = null,
+                    RecVer = null
+                });
+            }
+
+            return meisaiDataList;
         }
 
         private static List<string[]> ReadCsv(string filePath, Encoding encoding)
@@ -25,18 +57,30 @@ namespace UnicardSync
             try
             {
                 using (var reader = new StreamReader(filePath, encoding))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    while (csv.Read())
+                    var config = new CsvConfiguration(CultureInfo.InvariantCulture)
                     {
-                        var row = new List<string>();
-                        for (int i = 0; i < csv.Parser.Count; i++)
+                        Delimiter = ",",
+                        HasHeaderRecord = false,
+                        IgnoreBlankLines = false,
+                        TrimOptions = TrimOptions.None,
+                        BadDataFound = null
+                    };
+
+                    using (var csv = new CsvReader(reader, config))
+                    {
+                        while (csv.Read())
                         {
-                            row.Add(csv.GetField(i));
+                            var row = new List<string>();
+                            for (int i = 0; i < csv.Parser.Count; i++)
+                            {
+                                row.Add(csv.GetField(i));
+                            }
+                            result.Add(row.ToArray());
                         }
-                        result.Add(row.ToArray());
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -57,24 +101,24 @@ namespace UnicardSync
 
     public class MeisaiData
     {
-        public int ID { get; set; }
+        public int? ID { get; set; } // 取り込み時はnullを設定
         public string Place { get; set; }
         public long Amount { get; set; }
         public DateTime Date { get; set; }
         public string Note { get; set; }
-        public int TorikomiID { get; set; }
-        public DateTime InsDateTime { get; set; }
-        public DateTime UpdDateTime { get; set; }
-        public int RecVer { get; set; }
+        public int? TorikomiID { get; set; } // 取り込み時はnullを設定
+        public DateTime? InsDateTime { get; set; } // 取り込み時はnullを設定
+        public DateTime? UpdDateTime { get; set; } // 取り込み時はnullを設定
+        public int? RecVer { get; set; } // 取り込み時はnullを設定
     }
 
     public class TorikomiData
     {
-        public int ID { get; set; }
+        public int? ID { get; set; } // 取り込み時はnullを設定
         public string FileName { get; set; }
         public string TorikomiType { get; set; }
-        public DateTime InsDateTime { get; set; }
-        public DateTime UpdDateTime { get; set; }
-        public int RecVer { get; set; }
+        public DateTime? InsDateTime { get; set; } // 取り込み時はnullを設定
+        public DateTime? UpdDateTime { get; set; } // 取り込み時はnullを設定
+        public int? RecVer { get; set; } // 取り込み時はnullを設定
     }
 }

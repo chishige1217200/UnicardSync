@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace UnicardSync
             }
 
             // 初期選択値
-            string path = string.Empty;
+            string filePath = string.Empty;
 
             // ファイル選択ダイアログ
             using (var dlg = new CommonOpenFileDialog())
@@ -54,9 +55,18 @@ namespace UnicardSync
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     // 選択値で更新
-                    path = dlg.FileName;
-                    // ファイルの読み込み
-                    MeisaiReader.ReadMeisai(path, TorikomiConfigHelper.Config[TorikomiTypeComboBox.SelectedIndex]);
+                    filePath = dlg.FileName;
+                    try
+                    {
+                        // ファイルの読み込み
+                        List<MeisaiData> meisaiDataList = MeisaiReader.ReadMeisai(filePath, TorikomiConfigHelper.Config[TorikomiTypeComboBox.SelectedIndex]);
+
+                        string fileName = Path.GetFileName(filePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("ファイル '" + filePath + "' の読み込みに失敗しました: " + ex.Message);
+                    }
                 }
             }
         }
