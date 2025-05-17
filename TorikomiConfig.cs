@@ -56,7 +56,7 @@ namespace UnicardSync
             }
         }
 
-        public static int getMaxColumnsIndex(TorikomiConfig config)
+        public static int GetMaxColumnsIndex(TorikomiConfig config)
         {
             int maxColumnsIndex = 0;
 

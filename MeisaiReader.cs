@@ -24,7 +24,7 @@ namespace UnicardSync
                 throw new Exception("取り込みするファイルの行数が不足しています。");
             }
 
-            if (csvDataList[config.SkipTopRows].Length < TorikomiConfigHelper.getMaxColumnsIndex(config))
+            if (csvDataList[config.SkipTopRows].Length < TorikomiConfigHelper.GetMaxColumnsIndex(config))
             {
                 throw new Exception("取り込みするファイルの列数が不足しています。");
             }
