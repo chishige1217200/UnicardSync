@@ -36,6 +36,7 @@ namespace UnicardSync
             if (TorikomiTypeComboBox.SelectedValue == null || TorikomiTypeComboBox.SelectedValue.ToString() == "")
             {
                 MessageBox.Show("データ取込を行う前に取込区分を選択してください。", "取込エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             // 初期選択値
