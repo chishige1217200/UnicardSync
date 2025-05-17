@@ -35,7 +35,7 @@ namespace UnicardSync
         {
             if (TorikomiTypeComboBox.SelectedValue == null || TorikomiTypeComboBox.SelectedValue.ToString() == "")
             {
-                MessageBox.Show("データ取込を行う前に取込区分を選択してください。", "取込エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("データ取込を行う前に取り込み区分を選択してください。", "取り込みエラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             // 初期選択値
@@ -65,7 +65,7 @@ namespace UnicardSync
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("ファイル '" + filePath + "' の読み込みに失敗しました: " + ex.Message);
+                        MessageBox.Show("ファイル '" + filePath + "' の読み込みに失敗しました。取り込み区分を間違えていませんか?\nエラー内容: " + ex.Message, "読み込みエラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

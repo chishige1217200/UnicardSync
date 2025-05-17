@@ -37,8 +37,8 @@ namespace UnicardSync
                 {
                     ID = null,
                     Place = csvDataList[i][config.PlaceUsed],
-                    Amount = long.Parse(csvDataList[i][config.AmountUsed]),
-                    Date = DateTime.Parse(csvDataList[i][config.DateUsed]),
+                    Amount = long.Parse(csvDataList[i][config.AmountUsed], NumberStyles.AllowThousands, CultureInfo.InvariantCulture),
+                    Date = DateTime.Parse(csvDataList[i][config.DateUsed].Trim()),
                     Note = config.Note != -1 ? csvDataList[i][config.Note] : "",
                     TorikomiID = null,
                     InsDateTime = null,
@@ -60,10 +60,7 @@ namespace UnicardSync
                 {
                     var config = new CsvConfiguration(CultureInfo.InvariantCulture)
                     {
-                        Delimiter = ",",
                         HasHeaderRecord = false,
-                        IgnoreBlankLines = false,
-                        TrimOptions = TrimOptions.None,
                         BadDataFound = null
                     };
 
@@ -84,7 +81,7 @@ namespace UnicardSync
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ファイル '" + filePath + "' の読み込みに失敗しました: " + ex.Message);
+                throw ex;
             }
 
             return result;
