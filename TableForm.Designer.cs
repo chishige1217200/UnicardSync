@@ -33,6 +33,13 @@
             this.ExportButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.TorikomiTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.placeUsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.amountUsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dateUsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.note = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.fileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.torikomiType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Table)).BeginInit();
             this.SuspendLayout();
             // 
@@ -41,6 +48,14 @@
             this.Table.AllowUserToAddRows = false;
             this.Table.AllowUserToDeleteRows = false;
             this.Table.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Table.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id,
+            this.placeUsed,
+            this.amountUsed,
+            this.dateUsed,
+            this.note,
+            this.fileName,
+            this.torikomiType});
             this.Table.Location = new System.Drawing.Point(0, 30);
             this.Table.Name = "Table";
             this.Table.ReadOnly = true;
@@ -80,6 +95,50 @@
             this.TorikomiTypeComboBox.Size = new System.Drawing.Size(150, 20);
             this.TorikomiTypeComboBox.TabIndex = 3;
             // 
+            // id
+            // 
+            this.id.HeaderText = "明細番号";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            // 
+            // placeUsed
+            // 
+            this.placeUsed.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.placeUsed.HeaderText = "利用先";
+            this.placeUsed.Name = "placeUsed";
+            this.placeUsed.ReadOnly = true;
+            // 
+            // amountUsed
+            // 
+            this.amountUsed.HeaderText = "金額";
+            this.amountUsed.Name = "amountUsed";
+            this.amountUsed.ReadOnly = true;
+            // 
+            // dateUsed
+            // 
+            this.dateUsed.HeaderText = "利用日";
+            this.dateUsed.Name = "dateUsed";
+            this.dateUsed.ReadOnly = true;
+            // 
+            // note
+            // 
+            this.note.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.note.HeaderText = "備考";
+            this.note.Name = "note";
+            this.note.ReadOnly = true;
+            // 
+            // fileName
+            // 
+            this.fileName.HeaderText = "ファイル名";
+            this.fileName.Name = "fileName";
+            this.fileName.ReadOnly = true;
+            // 
+            // torikomiType
+            // 
+            this.torikomiType.HeaderText = "取込区分";
+            this.torikomiType.Name = "torikomiType";
+            this.torikomiType.ReadOnly = true;
+            // 
             // TableForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -104,6 +163,13 @@
         private System.Windows.Forms.Button ExportButton;
         private System.Windows.Forms.Button ImportButton;
         private System.Windows.Forms.ComboBox TorikomiTypeComboBox;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn placeUsed;
+        private System.Windows.Forms.DataGridViewTextBoxColumn amountUsed;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dateUsed;
+        private System.Windows.Forms.DataGridViewTextBoxColumn note;
+        private System.Windows.Forms.DataGridViewTextBoxColumn fileName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn torikomiType;
     }
 }
 
