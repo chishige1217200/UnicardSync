@@ -21,12 +21,12 @@ namespace UnicardSync
 
             if (csvDataList.Count <= config.SkipTopRows + config.SkipBottomRows)
             {
-                throw new Exception("取り込みするファイルの行数が不足しています。");
+                throw new Exception("取込するファイルの行数が不足しています。");
             }
 
             if (csvDataList[config.SkipTopRows].Length < TorikomiConfigHelper.GetMaxColumnsIndex(config))
             {
-                throw new Exception("取り込みするファイルの列数が不足しています。");
+                throw new Exception("取込するファイルの列数が不足しています。");
             }
 
             List<MeisaiData> meisaiDataList = new List<MeisaiData>();
@@ -98,24 +98,24 @@ namespace UnicardSync
 
     public class MeisaiData
     {
-        public int? ID { get; set; } // 取り込み時はnullを設定
+        public int? ID { get; set; } // 取込時はnullを設定
         public string Place { get; set; }
         public long Amount { get; set; }
         public DateTime Date { get; set; }
         public string Note { get; set; }
-        public int? TorikomiID { get; set; } // 取り込み時はnullを設定
-        public DateTime? InsDateTime { get; set; } // 取り込み時はnullを設定
-        public DateTime? UpdDateTime { get; set; } // 取り込み時はnullを設定
-        public int? RecVer { get; set; } // 取り込み時はnullを設定
+        public int? TorikomiID { get; set; } // 取込時はnullを設定
+        public DateTime? InsDateTime { get; set; } // 取込時はnullを設定
+        public DateTime? UpdDateTime { get; set; } // 取込時はnullを設定
+        public int? RecVer { get; set; } // 取込時はnullを設定
     }
 
     public class TorikomiData
     {
-        public int? ID { get; set; } // 取り込み時はnullを設定
+        public int? ID { get; set; } // 取込時はnullを設定
         public string FileName { get; set; }
         public string TorikomiType { get; set; }
-        public DateTime? InsDateTime { get; set; } // 取り込み時はnullを設定
-        public DateTime? UpdDateTime { get; set; } // 取り込み時はnullを設定
-        public int? RecVer { get; set; } // 取り込み時はnullを設定
+        public DateTime? InsDateTime { get; set; } // 取込時はnullを設定
+        public DateTime? UpdDateTime { get; set; } // 取込時はnullを設定
+        public int? RecVer { get; set; } // 取込時はnullを設定
     }
 }

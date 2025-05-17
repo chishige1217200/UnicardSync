@@ -44,7 +44,7 @@ namespace UnicardSync
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("ファイル '" + filePath + "' の読み込みに失敗しました: " + ex.Message);
+                    Console.WriteLine("ファイル '" + filePath + "' の読込に失敗しました: " + ex.Message);
                 }
             }
 
