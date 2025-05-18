@@ -209,6 +209,7 @@ namespace UnicardSync
             Table.Columns["利用日"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             Table.Columns["備考"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Table.Columns["備考"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            Table.Columns["取込区分"].Width = 200;
             Table.Columns["ファイル名"].Width = 200;
         }
 
