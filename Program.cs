@@ -17,13 +17,9 @@ namespace UnicardSync
         static void Main()
         {
             // SQLiteデータベースの初期化
-            string dbFileName = "database.db";
-            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbFileName);
-            bool isNewDatabase = !File.Exists(dbPath);
+            bool isNewDatabase = !File.Exists(DatabaseConfig.DBPath);
 
-            string connectionString = $"Data Source={dbPath}";
-
-            using (var connection = new SqliteConnection(connectionString))
+            using (var connection = DatabaseConfig.GetConnection())
             {
                 connection.Open();
 

@@ -27,10 +27,14 @@ namespace UnicardSync
         {
             Control control = (Control)sender;
 
-            this.Table.Width = control.Width - 16;
             this.Table.Height = control.Height - 69;
         }
 
+        /// <summary>
+        /// データ取込ボタン押下時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ImportButton_Click(object sender, EventArgs e)
         {
             if (TorikomiTypeComboBox.SelectedValue == null || TorikomiTypeComboBox.SelectedValue.ToString() == "")
@@ -72,9 +76,131 @@ namespace UnicardSync
             }
         }
 
+        /// <summary>
+        /// データ出力ボタン押下時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExportButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        /// <summary>
+        /// データベースからデータを取得する処理
+        /// </summary>
+        private void GetDatabaseData()
+        {
+            List<MeisaiData> meisaiDataList = new List<MeisaiData>();
+            List<TorikomiData> torikomiDataList = new List<TorikomiData>();
+            using (var connection = DatabaseConfig.GetConnection())
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM used";
+
+                // 取込明細テーブルからデータを取得
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        meisaiDataList.Add(new MeisaiData
+                        {
+                            ID = int.Parse(reader["id"].ToString()),
+                            Place = reader["place_used"].ToString(),
+                            Amount = Convert.ToInt64(reader["amount_used"]),
+                            Date = DateTime.Parse(reader["date_used"].ToString()),
+                            Note = reader["note"].ToString(),
+                            TorikomiID = int.Parse(reader["torikomi_id"].ToString()),
+                            InsDateTime = DateTime.Parse(reader["ins_datetime"].ToString()),
+                            UpdDateTime = DateTime.Parse(reader["upd_datetime"].ToString()),
+                            RecVer = int.Parse(reader["rec_ver"].ToString())
+                        });
+                    }
+                }
+
+                var command2 = connection.CreateCommand();
+                command2.CommandText = "SELECT * FROM torikomi";
+
+                // 取込履歴テーブルからデータを取得
+                using (var reader = command2.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        torikomiDataList.Add(new TorikomiData
+                        {
+                            ID = int.Parse(reader["id"].ToString()),
+                            FileName = reader["file_name"].ToString(),
+                            TorikomiType = reader["torikomi_type"].ToString(),
+                            InsDateTime = DateTime.Parse(reader["ins_datetime"].ToString()),
+                            UpdDateTime = DateTime.Parse(reader["upd_datetime"].ToString()),
+                            RecVer = int.Parse(reader["rec_ver"].ToString())
+                        });
+                    }
+                }
+            }
+
+            // LINQでデータを結合
+            var joinedData = from meisai in meisaiDataList
+                             join torikomi in torikomiDataList on meisai.TorikomiID equals torikomi.ID
+                             select new
+                             {
+                                 meisai.ID,
+                                 meisai.Place,
+                                 meisai.Amount,
+                                 meisai.Date,
+                                 meisai.Note,
+                                 torikomi.FileName,
+                                 torikomi.TorikomiType
+                             };
+
+            // DataTableを作成（日本語の列名を指定）
+            DataTable dt = new DataTable("明細データ");
+            dt.Columns.Add("明細番号", typeof(int));          // MeisaiData.ID
+            dt.Columns.Add("利用先", typeof(string));           // MeisaiData.Place
+            dt.Columns.Add("金額", typeof(long));             // MeisaiData.Amount
+            dt.Columns.Add("利用日", typeof(DateTime));         // MeisaiData.Date
+            dt.Columns.Add("備考", typeof(string));           // MeisaiData.Note
+            dt.Columns.Add("取込区分", typeof(string));       // TorikomiData.TorikomiType
+            dt.Columns.Add("ファイル名", typeof(string));     // TorikomiData.FileName
+
+            foreach (var item in joinedData)
+            {
+                dt.Rows.Add(
+                    item.ID,                  // 明細番号
+                    item.Place,               // 利用先
+                    item.Amount,              // 金額
+                    item.Date,                // 利用日
+                    item.Note,                // 備考
+                    item.TorikomiType,        // 取込区分
+                    item.FileName             // ファイル名
+                );
+            }
+
+            // DataGridViewにバインド
+            Table.DataSource = dt;
+
+            Table.Columns["明細番号"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            Table.Columns["利用先"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Table.Columns["利用先"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            Table.Columns["金額"].DefaultCellStyle.Format = "N0";
+            Table.Columns["金額"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            Table.Columns["利用日"].DefaultCellStyle.Format = "yyyy/MM/dd";
+            Table.Columns["利用日"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            Table.Columns["備考"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Table.Columns["備考"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            Table.Columns["ファイル名"].Width = 200;
+        }
+
+        /// <summary>
+        /// 検索ボタン押下時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+            GetDatabaseData();
         }
     }
 }
