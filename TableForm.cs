@@ -65,8 +65,16 @@ namespace UnicardSync
                     {
                         // ファイルの読込
                         List<MeisaiData> meisaiDataList = MeisaiReader.ReadMeisai(filePath, TorikomiConfigHelper.Config[TorikomiTypeComboBox.SelectedIndex]);
+                        TorikomiData torikomiData = new TorikomiData
+                        {
+                            FileName = Path.GetFileName(filePath),
+                            TorikomiType = TorikomiTypeComboBox.SelectedValue.ToString(),
+                            InsDateTime = null,
+                            UpdDateTime = null,
+                            RecVer = null
+                        };
 
-                        string fileName = Path.GetFileName(filePath);
+                        InsertData(meisaiDataList, torikomiData);
                     }
                     catch (Exception ex)
                     {
@@ -84,6 +92,17 @@ namespace UnicardSync
         private void ExportButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+
+        /// <summary>
+        /// 検索ボタン押下時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+            GetDatabaseData();
         }
 
         /// <summary>
@@ -193,14 +212,48 @@ namespace UnicardSync
             Table.Columns["ファイル名"].Width = 200;
         }
 
-        /// <summary>
-        /// 検索ボタン押下時の処理
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SearchButton_Click(object sender, EventArgs e)
+        public void InsertData(List<MeisaiData> meisaiDataList, TorikomiData torikomiData)
         {
-            GetDatabaseData();
+            using (var connection = DatabaseConfig.GetConnection())
+            {
+                connection.Open();
+                var transaction = connection.BeginTransaction();
+
+                try
+                {
+                    var command = connection.CreateCommand();
+                    command.CommandText = @"
+                        INSERT INTO torikomi(file_name, torikomi_type)
+                        VALUES ($fileName, $torikomiType);
+                        SELECT last_insert_rowid();
+                    ";
+                    command.Parameters.AddWithValue("$fileName", torikomiData.FileName);
+                    command.Parameters.AddWithValue("$torikomiType", torikomiData.TorikomiType);
+                    long torikomiID = (long)command.ExecuteScalar();
+
+                    foreach (var meisaiData in meisaiDataList)
+                    {
+                        var insertCommand = connection.CreateCommand();
+                        insertCommand.CommandText = @"
+                            INSERT INTO used(place_used, amount_used, date_used, note, torikomi_id)
+                            VALUES ($placeUsed, $amountUsed, $dateUsed, $note, $torikomiID);
+                        ";
+                        insertCommand.Parameters.AddWithValue("$placeUsed", meisaiData.Place);
+                        insertCommand.Parameters.AddWithValue("$amountUsed", meisaiData.Amount);
+                        insertCommand.Parameters.AddWithValue("$dateUsed", meisaiData.Date.ToString("yyyy-MM-dd"));
+                        insertCommand.Parameters.AddWithValue("$note", meisaiData.Note);
+                        insertCommand.Parameters.AddWithValue("$torikomiID", torikomiID);
+                        insertCommand.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
     }
 }
