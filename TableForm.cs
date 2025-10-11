@@ -23,11 +23,26 @@ namespace UnicardSync
             TorikomiTypeComboBox.ValueMember = "torikomiType";
         }
 
+        /// <summary>
+        /// 画面リサイズ時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TableForm_Resize(object sender, EventArgs e)
         {
             Control control = (Control)sender;
 
-            this.Table.Height = control.Height - 69;
+            Table.Height = control.Height - 69;
+        }
+
+        /// <summary>
+        /// フォーム初期表示時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TableForm_Shown(object sender, EventArgs e)
+        {
+            GetDatabaseData();
         }
 
         /// <summary>
@@ -74,7 +89,19 @@ namespace UnicardSync
                             RecVer = null
                         };
 
-                        InsertData(meisaiDataList, torikomiData);
+                        var confirmForm = new ConfirmForm(meisaiDataList, torikomiData);
+                        DialogResult result = confirmForm.ShowDialog(this);
+                        confirmForm.Dispose();
+
+                        if (result == DialogResult.Yes)
+                        {
+                            InsertData(meisaiDataList, torikomiData);
+                            MessageBox.Show("取込が完了しました。", "取込完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("取込を中止しました。", "取込中止", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -106,7 +133,7 @@ namespace UnicardSync
         }
 
         /// <summary>
-        /// データベースからデータを取得する処理
+        /// データベースからデータを取得・表示する処理
         /// </summary>
         private void GetDatabaseData()
         {
@@ -176,13 +203,7 @@ namespace UnicardSync
 
             // DataTableを作成（日本語の列名を指定）
             DataTable dt = new DataTable("明細データ");
-            dt.Columns.Add("明細番号", typeof(int));          // MeisaiData.ID
-            dt.Columns.Add("利用先", typeof(string));           // MeisaiData.Place
-            dt.Columns.Add("金額", typeof(long));             // MeisaiData.Amount
-            dt.Columns.Add("利用日", typeof(DateTime));         // MeisaiData.Date
-            dt.Columns.Add("備考", typeof(string));           // MeisaiData.Note
-            dt.Columns.Add("取込区分", typeof(string));       // TorikomiData.TorikomiType
-            dt.Columns.Add("ファイル名", typeof(string));     // TorikomiData.FileName
+            DataColumnGenerator.AddMainDataColumns(dt);
 
             foreach (var item in joinedData)
             {
@@ -213,6 +234,11 @@ namespace UnicardSync
             Table.Columns["ファイル名"].Width = 200;
         }
 
+        /// <summary>
+        /// 取込データ登録処理
+        /// </summary>
+        /// <param name="meisaiDataList"></param>
+        /// <param name="torikomiData"></param>
         public void InsertData(List<MeisaiData> meisaiDataList, TorikomiData torikomiData)
         {
             using (var connection = DatabaseConfig.GetConnection())
@@ -254,6 +280,9 @@ namespace UnicardSync
                     transaction.Rollback();
                     throw;
                 }
+
+                // 再検索を実施
+                GetDatabaseData();
             }
         }
     }

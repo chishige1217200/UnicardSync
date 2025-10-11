@@ -41,9 +41,10 @@
             // 
             this.Table.AllowUserToAddRows = false;
             this.Table.AllowUserToDeleteRows = false;
+            this.Table.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Table.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.Table.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Table.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.Table.Location = new System.Drawing.Point(0, 30);
             this.Table.Name = "Table";
             this.Table.ReadOnly = true;
@@ -106,8 +107,10 @@
             this.Controls.Add(this.ExportButton);
             this.Controls.Add(this.Table);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(960, 540);
             this.Name = "TableForm";
             this.Text = "UnicardSync";
+            this.Shown += new System.EventHandler(this.TableForm_Shown);
             this.Resize += new System.EventHandler(this.TableForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.Table)).EndInit();
             this.ResumeLayout(false);
