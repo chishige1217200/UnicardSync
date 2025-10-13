@@ -118,7 +118,19 @@ namespace UnicardSync
         /// <param name="e"></param>
         private void ExportButton_Click(object sender, EventArgs e)
         {
+            DialogResult result = MessageBox.Show("UnicardSync形式で明細情報を全件出力します。\n取込履歴は引継できませんが、よろしいですか？\n\n＊database.dbをコピーすれば履歴も引継できます。", "出力確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
+            if (result == DialogResult.Yes)
+            {
+                //TODO: 出力処理
+                MessageBox.Show("出力が完了しました。", "出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            else
+            {
+                MessageBox.Show("出力を中止しました。", "出力中止", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
         }
 
 
