@@ -179,7 +179,7 @@ namespace UnicardSync
                 connection.Open();
 
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT * FROM used";
+                command.CommandText = "SELECT * FROM used WHERE del_flag = 0";
 
                 // 取込明細テーブルからデータを取得
                 using (var reader = command.ExecuteReader())
@@ -196,13 +196,14 @@ namespace UnicardSync
                             TorikomiID = int.Parse(reader["torikomi_id"].ToString()),
                             InsDateTime = DateTime.Parse(reader["ins_datetime"].ToString()),
                             UpdDateTime = DateTime.Parse(reader["upd_datetime"].ToString()),
-                            RecVer = int.Parse(reader["rec_ver"].ToString())
+                            RecVer = int.Parse(reader["rec_ver"].ToString()),
+                            DelFlag = int.Parse(reader["del_flag"].ToString())
                         });
                     }
                 }
 
                 var command2 = connection.CreateCommand();
-                command2.CommandText = "SELECT * FROM torikomi";
+                command2.CommandText = "SELECT * FROM torikomi WHERE del_flag = 0";
 
                 // 取込履歴テーブルからデータを取得
                 using (var reader = command2.ExecuteReader())
@@ -216,7 +217,8 @@ namespace UnicardSync
                             TorikomiType = reader["torikomi_type"].ToString(),
                             InsDateTime = DateTime.Parse(reader["ins_datetime"].ToString()),
                             UpdDateTime = DateTime.Parse(reader["upd_datetime"].ToString()),
-                            RecVer = int.Parse(reader["rec_ver"].ToString())
+                            RecVer = int.Parse(reader["rec_ver"].ToString()),
+                            DelFlag = int.Parse(reader["del_flag"].ToString())
                         });
                     }
                 }
@@ -339,7 +341,8 @@ namespace UnicardSync
                         note = $note,
                         upd_datetime = CURRENT_TIMESTAMP,
                         rec_ver = rec_ver + 1
-                    WHERE id = $id;
+                    WHERE id = $id
+                      AND del_flag = 0;
                 ";
                 command.Parameters.AddWithValue("$placeUsed", meisaiData.Place);
                 command.Parameters.AddWithValue("$amountUsed", meisaiData.Amount);
@@ -357,8 +360,12 @@ namespace UnicardSync
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                    DELETE FROM used
-                    WHERE id = $id;
+                    UPDATE used
+                    SET del_flag = 1,
+                        upd_datetime = CURRENT_TIMESTAMP,
+                        rec_ver = rec_ver + 1
+                    WHERE id = $id
+                      AND del_flag = 0;
                 ";
                 command.Parameters.AddWithValue("$id", meisaiID);
                 command.ExecuteNonQuery();

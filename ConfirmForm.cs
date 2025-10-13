@@ -57,7 +57,7 @@ namespace UnicardSync
 
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                    SELECT id FROM torikomi where file_name = $fileName;
+                    SELECT id FROM torikomi WHERE file_name = $fileName AND del_flag = 0;
                 ";
                 command.Parameters.AddWithValue("$fileName", torikomiData.FileName);
 
@@ -98,7 +98,7 @@ namespace UnicardSync
         private void YesButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Yes;
-            Close();
+            this.Close();
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace UnicardSync
         private void NoButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.No;
-            Close();
+            this.Close();
         }
     }
 }

@@ -66,7 +66,8 @@ namespace UnicardSync
                     TorikomiID = meisaiData.TorikomiID,
                     InsDateTime = meisaiData.InsDateTime,
                     UpdDateTime = DateTime.Now,
-                    RecVer = meisaiData.RecVer
+                    RecVer = meisaiData.RecVer,
+                    DelFlag = meisaiData.DelFlag
                 };
                 tableForm.UpdateMeisaiData(updatedMeisaiData);
 
