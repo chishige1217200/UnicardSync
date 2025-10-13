@@ -349,5 +349,20 @@ namespace UnicardSync
                 command.ExecuteNonQuery();
             }
         }
+
+        public void DeleteMeisaiData(int meisaiID)
+        {
+            using (var connection = DatabaseConfig.GetConnection())
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    DELETE FROM used
+                    WHERE id = $id;
+                ";
+                command.Parameters.AddWithValue("$id", meisaiID);
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }

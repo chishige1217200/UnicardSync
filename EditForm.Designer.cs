@@ -41,6 +41,7 @@
             this.numericUpDownAmountUsed = new System.Windows.Forms.NumericUpDown();
             this.UpdateButton = new System.Windows.Forms.Button();
             this.BackButton = new System.Windows.Forms.Button();
+            this.DeleteButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountUsed)).BeginInit();
             this.SuspendLayout();
             // 
@@ -176,11 +177,23 @@
             this.BackButton.UseVisualStyleBackColor = true;
             this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
             // 
+            // DeleteButton
+            // 
+            this.DeleteButton.ForeColor = System.Drawing.Color.Red;
+            this.DeleteButton.Location = new System.Drawing.Point(14, 176);
+            this.DeleteButton.Name = "DeleteButton";
+            this.DeleteButton.Size = new System.Drawing.Size(75, 23);
+            this.DeleteButton.TabIndex = 107;
+            this.DeleteButton.Text = "削除する";
+            this.DeleteButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
+            // 
             // EditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 211);
+            this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.BackButton);
             this.Controls.Add(this.UpdateButton);
             this.Controls.Add(this.numericUpDownAmountUsed);
@@ -217,5 +230,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownAmountUsed;
         private System.Windows.Forms.Button UpdateButton;
         private System.Windows.Forms.Button BackButton;
+        private System.Windows.Forms.Button DeleteButton;
     }
 }

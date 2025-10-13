@@ -75,5 +75,25 @@ namespace UnicardSync
                 this.Close();
             }
         }
+
+        /// <summary>
+        /// 削除ボタン押下時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteButton_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("明細を削除します。よろしいですか？\n\nこの操作は戻せません。", $"削除確認[明細番号:{meisaiData.ID}]", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                // 明細を更新する
+                tableForm.DeleteMeisaiData((int)meisaiData.ID);
+
+                // 親フォームのテーブル表示を更新する
+                tableForm.GetDatabaseData();
+                this.Close();
+            }
+        }
     }
 }
