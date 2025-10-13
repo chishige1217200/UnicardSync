@@ -14,6 +14,9 @@ namespace UnicardSync
 {
     public partial class TableForm : Form
     {
+        private List<MeisaiData> meisaiDataList = new List<MeisaiData>();
+        private List<TorikomiData> torikomiDataList = new List<TorikomiData>();
+
         public TableForm()
         {
             InitializeComponent();
@@ -105,7 +108,7 @@ namespace UnicardSync
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("ファイル '" + filePath + "' の読込に失敗しました。取込区分を間違えていませんか?\nエラー内容: " + ex.Message, "読込エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("ファイル '" + filePath + "' の読込に失敗しました。取込区分を間違えていませんか？\nエラー内容: " + ex.Message, "読込エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -145,12 +148,32 @@ namespace UnicardSync
         }
 
         /// <summary>
+        /// DataGridViewのセルクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Table_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // 無効な範囲の場合
+            if (e.RowIndex == -1 || e.ColumnIndex == -1)
+            {
+                return;
+            }
+
+            // 明細編集画面を表示
+            int meisaiID = int.Parse(Table.Rows[e.RowIndex].Cells["明細番号"].Value.ToString());
+            var torikomiID = this.meisaiDataList.Single(m => m.ID == meisaiID).TorikomiID;
+            EditForm editForm = new EditForm(this.meisaiDataList.Single(m => m.ID == meisaiID), this.torikomiDataList.Single(t => t.ID == torikomiID), this);
+            editForm.Show();
+        }
+
+        /// <summary>
         /// データベースからデータを取得・表示する処理
         /// </summary>
-        private void GetDatabaseData()
+        public void GetDatabaseData()
         {
-            List<MeisaiData> meisaiDataList = new List<MeisaiData>();
-            List<TorikomiData> torikomiDataList = new List<TorikomiData>();
+            this.meisaiDataList = new List<MeisaiData>();
+            this.torikomiDataList = new List<TorikomiData>();
             using (var connection = DatabaseConfig.GetConnection())
             {
                 connection.Open();
@@ -163,7 +186,7 @@ namespace UnicardSync
                 {
                     while (reader.Read())
                     {
-                        meisaiDataList.Add(new MeisaiData
+                        this.meisaiDataList.Add(new MeisaiData
                         {
                             ID = int.Parse(reader["id"].ToString()),
                             Place = reader["place_used"].ToString(),
@@ -186,7 +209,7 @@ namespace UnicardSync
                 {
                     while (reader.Read())
                     {
-                        torikomiDataList.Add(new TorikomiData
+                        this.torikomiDataList.Add(new TorikomiData
                         {
                             ID = int.Parse(reader["id"].ToString()),
                             FileName = reader["file_name"].ToString(),
@@ -200,8 +223,8 @@ namespace UnicardSync
             }
 
             // LINQでデータを結合
-            var joinedData = from meisai in meisaiDataList
-                             join torikomi in torikomiDataList on meisai.TorikomiID equals torikomi.ID
+            var joinedData = from meisai in this.meisaiDataList
+                             join torikomi in this.torikomiDataList on meisai.TorikomiID equals torikomi.ID
                              select new
                              {
                                  meisai.ID,

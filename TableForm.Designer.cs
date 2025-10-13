@@ -34,6 +34,7 @@
             this.ImportButton = new System.Windows.Forms.Button();
             this.TorikomiTypeComboBox = new System.Windows.Forms.ComboBox();
             this.SearchButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Table)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,6 +54,7 @@
             this.Table.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Table.Size = new System.Drawing.Size(1264, 651);
             this.Table.TabIndex = 0;
+            this.Table.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Table_CellContentClick);
             // 
             // ExportButton
             // 
@@ -96,11 +98,21 @@
             this.SearchButton.UseVisualStyleBackColor = true;
             this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(109, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(219, 12);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "明細をダブルクリックして編集画面を開きます。";
+            // 
             // TableForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.SearchButton);
             this.Controls.Add(this.TorikomiTypeComboBox);
             this.Controls.Add(this.ImportButton);
@@ -114,6 +126,7 @@
             this.Resize += new System.EventHandler(this.TableForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.Table)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -124,6 +137,7 @@
         private System.Windows.Forms.Button ImportButton;
         private System.Windows.Forms.ComboBox TorikomiTypeComboBox;
         private System.Windows.Forms.Button SearchButton;
+        private System.Windows.Forms.Label label1;
     }
 }
 
