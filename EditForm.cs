@@ -55,7 +55,22 @@ namespace UnicardSync
 
             if (result == DialogResult.Yes)
             {
-                // 表示を更新する
+                // 明細を更新する
+                MeisaiData updatedMeisaiData = new MeisaiData
+                {
+                    ID = meisaiData.ID,
+                    Place = textBoxPlaceUsed.Text,
+                    Amount = (long)numericUpDownAmountUsed.Value,
+                    Date = dateTimePickerDateUsed.Value,
+                    Note = textBoxNote.Text,
+                    TorikomiID = meisaiData.TorikomiID,
+                    InsDateTime = meisaiData.InsDateTime,
+                    UpdDateTime = DateTime.Now,
+                    RecVer = meisaiData.RecVer
+                };
+                tableForm.UpdateMeisaiData(updatedMeisaiData);
+
+                // 親フォームのテーブル表示を更新する
                 tableForm.GetDatabaseData();
                 this.Close();
             }

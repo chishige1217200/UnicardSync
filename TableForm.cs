@@ -320,5 +320,34 @@ namespace UnicardSync
                 GetDatabaseData();
             }
         }
+
+        /// <summary>
+        /// 明細データ更新処理
+        /// </summary>
+        /// <param name="meisaiData">明細データ</param>
+        public void UpdateMeisaiData (MeisaiData meisaiData)
+        {
+            using (var connection = DatabaseConfig.GetConnection())
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    UPDATE used
+                    SET place_used = $placeUsed,
+                        amount_used = $amountUsed,
+                        date_used = $dateUsed,
+                        note = $note,
+                        upd_datetime = CURRENT_TIMESTAMP,
+                        rec_ver = rec_ver + 1
+                    WHERE id = $id;
+                ";
+                command.Parameters.AddWithValue("$placeUsed", meisaiData.Place);
+                command.Parameters.AddWithValue("$amountUsed", meisaiData.Amount);
+                command.Parameters.AddWithValue("$dateUsed", meisaiData.Date.ToString("yyyy-MM-dd"));
+                command.Parameters.AddWithValue("$note", meisaiData.Note);
+                command.Parameters.AddWithValue("$id", meisaiData.ID);
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }
