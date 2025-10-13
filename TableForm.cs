@@ -329,6 +329,7 @@ namespace UnicardSync
         /// <param name="meisaiData">明細データ</param>
         public void UpdateMeisaiData (MeisaiData meisaiData)
         {
+            // TODO: 楽観的排他制御
             using (var connection = DatabaseConfig.GetConnection())
             {
                 connection.Open();
@@ -355,6 +356,7 @@ namespace UnicardSync
 
         public void DeleteMeisaiData(int meisaiID)
         {
+            // TODO: 楽観的排他制御
             using (var connection = DatabaseConfig.GetConnection())
             {
                 connection.Open();
@@ -369,6 +371,8 @@ namespace UnicardSync
                 ";
                 command.Parameters.AddWithValue("$id", meisaiID);
                 command.ExecuteNonQuery();
+
+                // TODO: 取込履歴の削除も必要か検討
             }
         }
     }
