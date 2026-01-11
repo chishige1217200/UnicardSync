@@ -125,7 +125,7 @@ namespace UnicardSync
 
             if (result == DialogResult.Yes)
             {
-                //TODO: 出力処理
+                // TODO: 出力処理
                 MessageBox.Show("出力が完了しました。", "出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -327,9 +327,8 @@ namespace UnicardSync
         /// 明細データ更新処理
         /// </summary>
         /// <param name="meisaiData">明細データ</param>
-        public void UpdateMeisaiData (MeisaiData meisaiData)
+        public int UpdateMeisaiData(MeisaiData meisaiData)
         {
-            // TODO: 楽観的排他制御
             using (var connection = DatabaseConfig.GetConnection())
             {
                 connection.Open();
@@ -343,6 +342,7 @@ namespace UnicardSync
                         upd_datetime = CURRENT_TIMESTAMP,
                         rec_ver = rec_ver + 1
                     WHERE id = $id
+                      AND rec_ver = $recVer
                       AND del_flag = 0;
                 ";
                 command.Parameters.AddWithValue("$placeUsed", meisaiData.Place);
@@ -350,13 +350,13 @@ namespace UnicardSync
                 command.Parameters.AddWithValue("$dateUsed", meisaiData.Date.ToString("yyyy-MM-dd"));
                 command.Parameters.AddWithValue("$note", meisaiData.Note);
                 command.Parameters.AddWithValue("$id", meisaiData.ID);
-                command.ExecuteNonQuery();
+                command.Parameters.AddWithValue("$recVer", meisaiData.RecVer);
+                return command.ExecuteNonQuery();
             }
         }
 
-        public void DeleteMeisaiData(int meisaiID)
+        public int DeleteMeisaiData(MeisaiData meisaiData)
         {
-            // TODO: 楽観的排他制御
             using (var connection = DatabaseConfig.GetConnection())
             {
                 connection.Open();
@@ -367,12 +367,14 @@ namespace UnicardSync
                         upd_datetime = CURRENT_TIMESTAMP,
                         rec_ver = rec_ver + 1
                     WHERE id = $id
+                      AND rec_ver = $recVer
                       AND del_flag = 0;
                 ";
-                command.Parameters.AddWithValue("$id", meisaiID);
-                command.ExecuteNonQuery();
+                command.Parameters.AddWithValue("$id", meisaiData.ID);
+                command.Parameters.AddWithValue("$recVer", meisaiData.RecVer);
+                return command.ExecuteNonQuery();
 
-                // TODO: 取込履歴の削除も必要か検討
+                // TODO: 取込履歴の削除も必要か検討（一旦不要）
             }
         }
     }

@@ -69,7 +69,13 @@ namespace UnicardSync
                     RecVer = meisaiData.RecVer,
                     DelFlag = meisaiData.DelFlag
                 };
-                tableForm.UpdateMeisaiData(updatedMeisaiData);
+                int updateCount = tableForm.UpdateMeisaiData(updatedMeisaiData);
+
+                if (updateCount == 0)
+                {
+                    MessageBox.Show("明細の更新に失敗しました。\n他ウィンドウから明細が更新されています。\n\n編集画面を開き直して実行してください。", "更新失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 // 親フォームのテーブル表示を更新する
                 tableForm.GetDatabaseData();
@@ -89,7 +95,13 @@ namespace UnicardSync
             if (result == DialogResult.Yes)
             {
                 // 明細を更新する
-                tableForm.DeleteMeisaiData((int)meisaiData.ID);
+                int updateCount = tableForm.DeleteMeisaiData(meisaiData);
+
+                if (updateCount == 0)
+                {
+                    MessageBox.Show("明細の更新に失敗しました。\n他ウィンドウから明細が更新されています。\n\n編集画面を開き直して実行してください。", "更新失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 // 親フォームのテーブル表示を更新する
                 tableForm.GetDatabaseData();
