@@ -69,11 +69,14 @@ namespace UnicardSync
                     RecVer = meisaiData.RecVer,
                     DelFlag = meisaiData.DelFlag
                 };
-                int updateCount = tableForm.UpdateMeisaiData(updatedMeisaiData);
 
-                if (updateCount == 0)
+                try
                 {
-                    MessageBox.Show("明細の更新に失敗しました。\n他ウィンドウから明細が更新されています。\n\n編集画面を開き直して実行してください。", "更新失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    tableForm.UpdateMeisaiData(updatedMeisaiData);
+                }
+                catch (UpdateConcurrencyException uce)
+                {
+                    MessageBox.Show(uce.Message + "\n他ウィンドウから明細が更新されています。\n\n編集画面を開き直して実行してください。", "更新失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -95,11 +98,14 @@ namespace UnicardSync
             if (result == DialogResult.Yes)
             {
                 // 明細を更新する
-                int updateCount = tableForm.DeleteMeisaiData(meisaiData);
-
-                if (updateCount == 0)
+                try
                 {
-                    MessageBox.Show("明細の更新に失敗しました。\n他ウィンドウから明細が更新されています。\n\n編集画面を開き直して実行してください。", "更新失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    tableForm.DeleteMeisaiData(meisaiData);
+                    tableForm.DeleteTorikomiData(meisaiData);
+                }
+                catch (UpdateConcurrencyException uce)
+                {
+                    MessageBox.Show(uce.Message + "\n他ウィンドウから明細が更新されています。\n\n編集画面を開き直して実行してください。", "削除失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 

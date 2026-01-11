@@ -136,6 +136,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TorikomiConfig.cs" />
+    <Compile Include="UpdateConcurrencyException.cs" />
     <EmbeddedResource Include="ConfirmForm.resx">
       <DependentUpon>ConfirmForm.cs</DependentUpon>
     </EmbeddedResource>

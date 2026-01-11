@@ -327,7 +327,7 @@ namespace UnicardSync
         /// 明細データ更新処理
         /// </summary>
         /// <param name="meisaiData">明細データ</param>
-        public int UpdateMeisaiData(MeisaiData meisaiData)
+        public void UpdateMeisaiData(MeisaiData meisaiData)
         {
             using (var connection = DatabaseConfig.GetConnection())
             {
@@ -351,11 +351,16 @@ namespace UnicardSync
                 command.Parameters.AddWithValue("$note", meisaiData.Note);
                 command.Parameters.AddWithValue("$id", meisaiData.ID);
                 command.Parameters.AddWithValue("$recVer", meisaiData.RecVer);
-                return command.ExecuteNonQuery();
+                int count = command.ExecuteNonQuery();
+
+                if (count == 0)
+                {
+                    throw new UpdateConcurrencyException("明細の更新に失敗しました。");
+                }
             }
         }
 
-        public int DeleteMeisaiData(MeisaiData meisaiData)
+        public void DeleteMeisaiData(MeisaiData meisaiData)
         {
             using (var connection = DatabaseConfig.GetConnection())
             {
@@ -372,9 +377,53 @@ namespace UnicardSync
                 ";
                 command.Parameters.AddWithValue("$id", meisaiData.ID);
                 command.Parameters.AddWithValue("$recVer", meisaiData.RecVer);
-                return command.ExecuteNonQuery();
+                int count = command.ExecuteNonQuery();
 
-                // TODO: 取込履歴の削除も必要か検討（一旦不要）
+                if (count == 0)
+                {
+                    throw new UpdateConcurrencyException("明細の削除に失敗しました。");
+                }
+            }
+        }
+
+        public void DeleteTorikomiData(MeisaiData meisaiData)
+        {
+            using (var connection = DatabaseConfig.GetConnection())
+            {
+                connection.Open();
+                var countCommand = connection.CreateCommand();
+                countCommand.CommandText = @"
+                    SELECT COUNT(u1.id)
+                    FROM used u1
+                    JOIN used u2 ON u1.torikomi_id = u2.torikomi_id
+                    WHERE u1.del_flag = 0
+                      AND u2.id = $id;
+                ";
+                countCommand.Parameters.AddWithValue("$id", meisaiData.ID);
+                long count = (long)countCommand.ExecuteScalar();
+
+                // 有効な取込明細行が無くなったら、取込履歴も論理削除する
+                if (count == 0)
+                {
+                    var updateCommand = connection.CreateCommand();
+                    updateCommand.CommandText = @"
+                    UPDATE torikomi
+                    SET del_flag = 1,
+                        upd_datetime = CURRENT_TIMESTAMP,
+                        rec_ver = rec_ver + 1
+                    WHERE id = $id
+                      AND rec_ver = $recVer
+                      AND del_flag = 0;
+                ";
+                    updateCommand.Parameters.AddWithValue("$id", meisaiData.TorikomiID);
+                    updateCommand.Parameters.AddWithValue("$recVer", meisaiData.RecVer);
+                    int updateCount = updateCommand.ExecuteNonQuery();
+
+                    if (updateCount == 0)
+                    {
+                        throw new UpdateConcurrencyException("取込履歴の削除に失敗しました。");
+                    }
+                }
             }
         }
     }
