@@ -127,6 +127,7 @@
       <DependentUpon>EditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MeisaiReader.cs" />
+    <Compile Include="MeisaiWriter.cs" />
     <Compile Include="TableForm.cs">
       <SubType>Form</SubType>
     </Compile>

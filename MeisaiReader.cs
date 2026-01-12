@@ -14,7 +14,6 @@ namespace UnicardSync
     {
         public static List<MeisaiData> ReadMeisai(string filePath, TorikomiConfig config)
         {
-
             Encoding encoding = Encoding.GetEncoding(config.Encoding);
             List<string[]> csvDataList = ReadCsv(filePath, encoding);
             PrintRecords(csvDataList);

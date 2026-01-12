@@ -72,7 +72,7 @@ namespace UnicardSync
                 dlg.Filters.Add(new CommonFileDialogFilter("テキストファイル", "*.csv"));
                 dlg.Filters.Add(new CommonFileDialogFilter("すべてのファイル", "*.*"));
                 dlg.Multiselect = false;
-                dlg.Title = "ファイルを選択してください";
+                dlg.Title = "入力元ファイル選択";
 
                 // ファイル選択ダイアログ表示
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
@@ -108,7 +108,7 @@ namespace UnicardSync
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("ファイル '" + filePath + "' の読込に失敗しました。取込区分を間違えていませんか？\nエラー内容: " + ex.Message, "読込エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("ファイル '" + filePath + "' の取込に失敗しました。取込区分を間違えていませんか？\nエラー内容: " + ex.Message, "取込エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -125,14 +125,37 @@ namespace UnicardSync
 
             if (result == DialogResult.Yes)
             {
-                // TODO: 出力処理
+                using (var dlg = new CommonSaveFileDialog())
+                {
+                    dlg.DefaultFileName = "UnicardSync_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv";
+                    dlg.Filters.Add(new CommonFileDialogFilter("テキストファイル", "*.csv"));
+                    dlg.Filters.Add(new CommonFileDialogFilter("すべてのファイル", "*.*"));
+                    dlg.Title = "出力先ファイル選択";
+                    // ファイル選択ダイアログ表示
+                    if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+                    {
+                        string filePath = dlg.FileName;
+                        try
+                        {
+                            MeisaiWriter.WriteMeisai(filePath, this.meisaiDataList, this.torikomiDataList);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("ファイル '" + filePath + "' の出力に失敗しました。\nエラー内容: " + ex.Message, "出力エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("出力を中止しました。", "出力中止", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+                }
                 MessageBox.Show("出力が完了しました。", "出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
             }
             else
             {
                 MessageBox.Show("出力を中止しました。", "出力中止", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
             }
         }
 
@@ -360,6 +383,11 @@ namespace UnicardSync
             }
         }
 
+        /// <summary>
+        /// 明細データ削除処理
+        /// </summary>
+        /// <param name="meisaiData"></param>
+        /// <exception cref="UpdateConcurrencyException"></exception>
         public void DeleteMeisaiData(MeisaiData meisaiData)
         {
             using (var connection = DatabaseConfig.GetConnection())
@@ -386,6 +414,11 @@ namespace UnicardSync
             }
         }
 
+        /// <summary>
+        /// 取込履歴データ削除処理
+        /// </summary>
+        /// <param name="meisaiData"></param>
+        /// <exception cref="UpdateConcurrencyException"></exception>
         public void DeleteTorikomiData(MeisaiData meisaiData)
         {
             using (var connection = DatabaseConfig.GetConnection())
