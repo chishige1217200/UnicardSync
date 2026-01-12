@@ -55,7 +55,8 @@ namespace UnicardSync
                 torikomi_type TEXT NOT NULL,
                 ins_datetime TEXT NOT NULL default CURRENT_TIMESTAMP, -- 'YYYY-MM-DD HH:MM:SS'形式で保存
                 upd_datetime TEXT NOT NULL default CURRENT_TIMESTAMP, -- 'YYYY-MM-DD HH:MM:SS'形式で保存
-                rec_ver INTEGER NOT NULL default 1
+                rec_ver INTEGER NOT NULL default 1,
+                del_flag INTEGER NOT NULL default 0
             );
             CREATE TABLE IF NOT EXISTS used (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,6 +68,7 @@ namespace UnicardSync
                 ins_datetime TEXT NOT NULL default CURRENT_TIMESTAMP, -- 'YYYY-MM-DD HH:MM:SS'形式で保存
                 upd_datetime TEXT NOT NULL default CURRENT_TIMESTAMP, -- 'YYYY-MM-DD HH:MM:SS'形式で保存
                 rec_ver INTEGER NOT NULL default 1,
+                del_flag INTEGER NOT NULL default 0,
                 FOREIGN KEY (torikomi_id) REFERENCES torikomi(id)
             );
         ";

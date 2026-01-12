@@ -14,7 +14,6 @@ namespace UnicardSync
     {
         public static List<MeisaiData> ReadMeisai(string filePath, TorikomiConfig config)
         {
-
             Encoding encoding = Encoding.GetEncoding(config.Encoding);
             List<string[]> csvDataList = ReadCsv(filePath, encoding);
             PrintRecords(csvDataList);
@@ -107,6 +106,7 @@ namespace UnicardSync
         public DateTime? InsDateTime { get; set; } // 取込時はnullを設定
         public DateTime? UpdDateTime { get; set; } // 取込時はnullを設定
         public int? RecVer { get; set; } // 取込時はnullを設定
+        public int DelFlag { get; set; } // 論理削除フラグ
     }
 
     public class TorikomiData
@@ -117,5 +117,6 @@ namespace UnicardSync
         public DateTime? InsDateTime { get; set; } // 取込時はnullを設定
         public DateTime? UpdDateTime { get; set; } // 取込時はnullを設定
         public int? RecVer { get; set; } // 取込時はnullを設定
+        public int DelFlag { get; set; } // 論理削除フラグ
     }
 }
