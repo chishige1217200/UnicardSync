@@ -183,6 +183,12 @@ namespace UnicardSync
                 return;
             }
 
+            // 集計行の場合
+            if (String.Empty.Equals(Table.Rows[e.RowIndex].Cells["明細番号"].Value.ToString()))
+            {
+                return;
+            }
+
             // 明細編集画面を表示
             int meisaiID = int.Parse(Table.Rows[e.RowIndex].Cells["明細番号"].Value.ToString());
             var torikomiID = this.meisaiDataList.Single(m => m.ID == meisaiID).TorikomiID;
@@ -278,8 +284,23 @@ namespace UnicardSync
                 );
             }
 
+            // 集計行の作成
+            var sum = joinedData.Sum(x => x.Amount);
+            dt.Rows.Add(
+                DBNull.Value,              // 明細番号
+                "【合計】",                 // 利用先
+                sum,                       // 金額
+                DBNull.Value,              // 利用日
+                DBNull.Value,              // 備考
+                DBNull.Value,              // 取込区分
+                DBNull.Value               // ファイル名
+            );
+
             // DataGridViewにバインド
             Table.DataSource = dt;
+
+            // 明細番号昇順で表示
+            dt.DefaultView.Sort = "明細番号 ASC";
 
             Table.Columns["明細番号"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             Table.Columns["利用先"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
