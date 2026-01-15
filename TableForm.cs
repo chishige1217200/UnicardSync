@@ -21,9 +21,29 @@ namespace UnicardSync
         {
             InitializeComponent();
 
+            // 取込区分コンボボックスの初期化
             TorikomiTypeComboBox.DataSource = TorikomiConfigHelper.Config;
             TorikomiTypeComboBox.DisplayMember = "torikomiType";
             TorikomiTypeComboBox.ValueMember = "torikomiType";
+
+            // 取込区分コンボボックスの初期化（検索用）
+            List<TorikomiConfig> torikomiConfigSearchList = new List<TorikomiConfig> (TorikomiConfigHelper.Config);
+            torikomiConfigSearchList.Insert(0, new TorikomiConfig { TorikomiType = "" }); // 空行追加
+            TorikomiTypeComboBoxSearch.DataSource = torikomiConfigSearchList;
+            TorikomiTypeComboBoxSearch.DisplayMember = "torikomiType";
+            TorikomiTypeComboBoxSearch.ValueMember = "torikomiType";
+
+            // 今日の日付
+            DateTime today = DateTime.Today;
+            // 今月の末日
+            DateTime endOfMonth = new DateTime(
+                today.Year,
+                today.Month,
+                DateTime.DaysInMonth(today.Year, today.Month)
+            );
+
+            // 利用日（まで）の初期化
+            this.DateTo.Value = endOfMonth;
         }
 
         /// <summary>
@@ -35,7 +55,7 @@ namespace UnicardSync
         {
             Control control = (Control)sender;
 
-            Table.Height = control.Height - 69;
+            Table.Height = control.Height - 129;
         }
 
         /// <summary>
