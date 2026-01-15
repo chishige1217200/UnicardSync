@@ -112,10 +112,11 @@
             // 
             this.dateTimePickerDateUsed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerDateUsed.CustomFormat = "yyyy/MM/dd";
+            this.dateTimePickerDateUsed.CustomFormat = "";
+            this.dateTimePickerDateUsed.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dateTimePickerDateUsed.Location = new System.Drawing.Point(71, 81);
             this.dateTimePickerDateUsed.Name = "dateTimePickerDateUsed";
-            this.dateTimePickerDateUsed.Size = new System.Drawing.Size(200, 19);
+            this.dateTimePickerDateUsed.Size = new System.Drawing.Size(110, 19);
             this.dateTimePickerDateUsed.TabIndex = 3;
             this.dateTimePickerDateUsed.Value = new System.DateTime(2025, 1, 1, 0, 0, 0, 0);
             // 
