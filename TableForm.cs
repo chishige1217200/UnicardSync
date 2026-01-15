@@ -191,11 +191,11 @@ namespace UnicardSync
         }
 
         /// <summary>
-        /// DataGridViewのセルクリック時の処理
+        /// DataGridViewのセルダブルクリック時の処理
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Table_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void Table_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             // 無効な範囲の場合
             if (e.RowIndex == -1 || e.ColumnIndex == -1)

@@ -73,7 +73,7 @@
             this.Table.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Table.Size = new System.Drawing.Size(1264, 591);
             this.Table.TabIndex = 100;
-            this.Table.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Table_CellContentClick);
+            this.Table.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Table_CellDoubleClick);
             // 
             // ExportButton
             // 
