@@ -11,27 +11,17 @@ namespace UnicardSync
 {
     public class MeisaiWriter
     {
-        public static void WriteMeisai(string filePath, List<MeisaiData> meisaiDataList, List<TorikomiData> torikomiDataList)
+        public static void WriteMeisai(string filePath, List<MeisaiData> meisaiDataList, List<TorikomiData> torikomiDataList, TableFormSearchData searchData)
         {
             Encoding encoding = Encoding.GetEncoding("UTF-8");
-            WriteCsv(filePath, encoding, meisaiDataList, torikomiDataList);
+            WriteCsv(filePath, encoding, meisaiDataList, torikomiDataList, searchData);
         }
 
-        private static void WriteCsv(string filePath, Encoding encoding, List<MeisaiData> meisaiDataList, List<TorikomiData> torikomiDataList)
+        private static void WriteCsv(string filePath, Encoding encoding, List<MeisaiData> meisaiDataList, List<TorikomiData> torikomiDataList, TableFormSearchData searchData)
         {
             try
             {
-                var records = (from meisai in meisaiDataList
-                               join torikomi in torikomiDataList on meisai.TorikomiID equals torikomi.ID
-                               select new
-                               {
-                                   meisai.Place,
-                                   meisai.Amount,
-                                   meisai.Date,
-                                   meisai.Note,
-                                   torikomi.FileName,
-                                   torikomi.TorikomiType
-                               });
+                var records = TableForm.CreateDisplayData(meisaiDataList, torikomiDataList, searchData);
 
                 var outputRecords = new List<UnicardSyncData>();
                 foreach (var record in records)
