@@ -145,6 +145,11 @@
             // AmountFrom
             // 
             this.AmountFrom.Location = new System.Drawing.Point(191, 32);
+            this.AmountFrom.Maximum = new decimal(new int[] {
+            2099999999,
+            0,
+            0,
+            0});
             this.AmountFrom.Name = "AmountFrom";
             this.AmountFrom.Size = new System.Drawing.Size(80, 19);
             this.AmountFrom.TabIndex = 6;
@@ -154,6 +159,11 @@
             this.AmountTo.Location = new System.Drawing.Point(300, 32);
             this.AmountTo.Maximum = new decimal(new int[] {
             2100000000,
+            0,
+            0,
+            0});
+            this.AmountTo.Minimum = new decimal(new int[] {
+            1,
             0,
             0,
             0});

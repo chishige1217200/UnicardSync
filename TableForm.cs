@@ -16,6 +16,7 @@ namespace UnicardSync
     {
         private List<MeisaiData> meisaiDataList = new List<MeisaiData>();
         private List<TorikomiData> torikomiDataList = new List<TorikomiData>();
+        private TableFormSearchData searchData = new TableFormSearchData();
 
         public TableForm()
         {
@@ -27,7 +28,7 @@ namespace UnicardSync
             TorikomiTypeComboBox.ValueMember = "torikomiType";
 
             // 取込区分コンボボックスの初期化（検索用）
-            List<TorikomiConfig> torikomiConfigSearchList = new List<TorikomiConfig> (TorikomiConfigHelper.Config);
+            List<TorikomiConfig> torikomiConfigSearchList = new List<TorikomiConfig>(TorikomiConfigHelper.Config);
             torikomiConfigSearchList.Insert(0, new TorikomiConfig { TorikomiType = "" }); // 空行追加
             TorikomiTypeComboBoxSearch.DataSource = torikomiConfigSearchList;
             TorikomiTypeComboBoxSearch.DisplayMember = "torikomiType";
@@ -44,6 +45,12 @@ namespace UnicardSync
 
             // 利用日（まで）の初期化
             this.DateTo.Value = endOfMonth;
+
+            // 検索データの初期化
+            searchData.AmountFrom = 0;
+            searchData.AmountTo = 2100000000;
+            searchData.DateFrom = new DateTime(2000, 1, 1);
+            searchData.DateTo = endOfMonth;
         }
 
         /// <summary>
@@ -157,7 +164,7 @@ namespace UnicardSync
                         string filePath = dlg.FileName;
                         try
                         {
-                            MeisaiWriter.WriteMeisai(filePath, this.meisaiDataList, this.torikomiDataList);
+                            MeisaiWriter.WriteMeisai(filePath, this.meisaiDataList, this.torikomiDataList, searchData);
                         }
                         catch (Exception ex)
                         {
@@ -187,6 +194,15 @@ namespace UnicardSync
         /// <param name="e"></param>
         private void SearchButton_Click(object sender, EventArgs e)
         {
+            // 検索条件の設定
+            searchData.Place = Place.Text;
+            searchData.AmountFrom = (long?)AmountFrom.Value;
+            searchData.AmountTo = (long?)AmountTo.Value;
+            searchData.DateFrom = DateFrom.Value;
+            searchData.DateTo = DateTo.Value;
+            searchData.Note = Note.Text;
+            searchData.TorikomiType = TorikomiTypeComboBoxSearch.SelectedValue.ToString();
+            searchData.FileName = FileName.Text;
             GetDatabaseData();
         }
 
@@ -214,6 +230,73 @@ namespace UnicardSync
             var torikomiID = this.meisaiDataList.Single(m => m.ID == meisaiID).TorikomiID;
             EditForm editForm = new EditForm(this.meisaiDataList.Single(m => m.ID == meisaiID), this.torikomiDataList.Single(t => t.ID == torikomiID), this);
             editForm.Show();
+        }
+
+        public static List<TableFormViewData> CreateDisplayData(List<MeisaiData> meisaiDataList, List<TorikomiData> torikomiDataList, TableFormSearchData searchData)
+        {
+            var joinedData = from meisai in meisaiDataList
+                             join torikomi in torikomiDataList on meisai.TorikomiID equals torikomi.ID
+                             select new
+                             {
+                                 meisai.ID,
+                                 meisai.Place,
+                                 meisai.Amount,
+                                 meisai.Date,
+                                 meisai.Note,
+                                 torikomi.FileName,
+                                 torikomi.TorikomiType
+                             };
+
+            List<TableFormViewData> result = new List<TableFormViewData>();
+            foreach (var item in joinedData)
+            {
+                result.Add(new TableFormViewData
+                {
+                    ID = (int)item.ID,
+                    Place = item.Place,
+                    Amount = item.Amount,
+                    Date = item.Date,
+                    Note = item.Note,
+                    FileName = item.FileName,
+                    TorikomiType = item.TorikomiType
+                });
+            }
+
+            // 検索条件で絞り込み
+            if (!string.IsNullOrEmpty(searchData.Place))
+            {
+                result = result.Where(x => x.Place.Contains(searchData.Place)).ToList();
+            }
+            if (searchData.AmountFrom.HasValue)
+            {
+                result = result.Where(x => x.Amount >= searchData.AmountFrom.Value).ToList();
+            }
+            if (searchData.AmountTo.HasValue)
+            {
+                result = result.Where(x => x.Amount <= searchData.AmountTo.Value).ToList();
+            }
+            if (searchData.DateFrom.HasValue)
+            {
+                result = result.Where(x => x.Date >= searchData.DateFrom.Value).ToList();
+            }
+            if (searchData.DateTo.HasValue)
+            {
+                result = result.Where(x => x.Date <= searchData.DateTo.Value).ToList();
+            }
+            if (!string.IsNullOrEmpty(searchData.Note))
+            {
+                result = result.Where(x => x.Note.Contains(searchData.Note)).ToList();
+            }
+            if (!string.IsNullOrEmpty(searchData.TorikomiType))
+            {
+                result = result.Where(x => x.TorikomiType == searchData.TorikomiType).ToList();
+            }
+            if (!string.IsNullOrEmpty(searchData.FileName))
+            {
+                result = result.Where(x => x.FileName.Contains(searchData.FileName)).ToList();
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -274,18 +357,7 @@ namespace UnicardSync
             }
 
             // LINQでデータを結合
-            var joinedData = from meisai in this.meisaiDataList
-                             join torikomi in this.torikomiDataList on meisai.TorikomiID equals torikomi.ID
-                             select new
-                             {
-                                 meisai.ID,
-                                 meisai.Place,
-                                 meisai.Amount,
-                                 meisai.Date,
-                                 meisai.Note,
-                                 torikomi.FileName,
-                                 torikomi.TorikomiType
-                             };
+            var joinedData = CreateDisplayData(this.meisaiDataList, this.torikomiDataList, this.searchData);
 
             // DataTableを作成（日本語の列名を指定）
             DataTable dt = new DataTable("明細データ");
@@ -500,5 +572,28 @@ namespace UnicardSync
                 }
             }
         }
+    }
+
+    public class TableFormViewData
+    {
+        public int ID { get; set; }
+        public string Place { get; set; }
+        public long Amount { get; set; }
+        public DateTime Date { get; set; }
+        public string Note { get; set; }
+        public string TorikomiType { get; set; }
+        public string FileName { get; set; }
+    }
+
+    public class TableFormSearchData
+    {
+        public string Place { get; set; }
+        public long? AmountFrom { get; set; }
+        public long? AmountTo { get; set; }
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
+        public string Note { get; set; }
+        public string TorikomiType { get; set; }
+        public string FileName { get; set; }
     }
 }
