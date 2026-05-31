@@ -49,8 +49,8 @@
             // 
             this.Table.AllowUserToAddRows = false;
             this.Table.AllowUserToDeleteRows = false;
-            this.Table.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.Table.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Table.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+            this.Table.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.Table.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.Table.Location = new System.Drawing.Point(0, 30);
             this.Table.Name = "Table";
