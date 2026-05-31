@@ -18,11 +18,15 @@ namespace UnicardSync
         public ConfirmForm()
         {
             InitializeComponent();
+
+            typeof(DataGridView).InvokeMember("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty, null, Table, new object[] { true });
         }
 
         public ConfirmForm(List<MeisaiData> meisaiDataList, TorikomiData torikomiData)
         {
             InitializeComponent();
+
+            typeof(DataGridView).InvokeMember("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty, null, Table, new object[] { true });
             this.meisaiDataList = meisaiDataList;
             this.torikomiData = torikomiData;
 
