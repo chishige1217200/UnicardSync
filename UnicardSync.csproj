@@ -112,6 +112,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfirmCompare.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConfirmCompare.Designer.cs">
+      <DependentUpon>ConfirmCompare.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmNormal.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConfirmNormal.Designer.cs">
+      <DependentUpon>ConfirmNormal.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataColumnGenerator.cs" />
     <Compile Include="ConfirmForm.cs">
       <SubType>Form</SubType>
@@ -140,6 +152,12 @@
     <Compile Include="UpdateConcurrencyException.cs" />
     <EmbeddedResource Include="ConfirmForm.resx">
       <DependentUpon>ConfirmForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfirmCompare.resx">
+      <DependentUpon>ConfirmCompare.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfirmNormal.resx">
+      <DependentUpon>ConfirmNormal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditForm.resx">
       <DependentUpon>EditForm.cs</DependentUpon>
