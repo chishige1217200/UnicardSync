@@ -24,12 +24,16 @@ namespace UnicardSync
         {
             Control control = (Control)sender;
 
+            Table.Height = control.Height - 30;
+            Table2.Height = control.Height - 30;
+
             Table.Width = control.Width / 2;
             Table2.Width = control.Width / 2;
-            Table2.Location = new Point(control.Width / 2, Table2.Location.Y);
 
-            Table.Height = control.Height;
-            Table2.Height = control.Height;
+            Table.Location = new Point(Table.Location.X, 30);
+            Table2.Location = new Point(control.Width / 2, 30);
+
+            label2.Location = new Point(control.Width / 2 + 12, 9);
         }
     }
 }

@@ -30,10 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfirmForm));
             this.label1 = new System.Windows.Forms.Label();
-            this.Table = new System.Windows.Forms.DataGridView();
             this.NoButton = new System.Windows.Forms.Button();
             this.YesButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.Table)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -44,22 +42,6 @@
             this.label1.Size = new System.Drawing.Size(221, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "下記の内容を取り込みます。よろしいですか？";
-            // 
-            // Table
-            // 
-            this.Table.AllowUserToAddRows = false;
-            this.Table.AllowUserToDeleteRows = false;
-            this.Table.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
-            this.Table.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.Table.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.Table.Location = new System.Drawing.Point(0, 30);
-            this.Table.Name = "Table";
-            this.Table.ReadOnly = true;
-            this.Table.RowHeadersVisible = false;
-            this.Table.RowTemplate.Height = 21;
-            this.Table.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Table.Size = new System.Drawing.Size(1264, 651);
-            this.Table.TabIndex = 1;
             // 
             // NoButton
             // 
@@ -90,14 +72,12 @@
             this.ClientSize = new System.Drawing.Size(1264, 681);
             this.Controls.Add(this.YesButton);
             this.Controls.Add(this.NoButton);
-            this.Controls.Add(this.Table);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(960, 540);
             this.Name = "ConfirmForm";
             this.Text = "取込確認";
             this.Resize += new System.EventHandler(this.ConfirmForm_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.Table)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -106,7 +86,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView Table;
         private System.Windows.Forms.Button NoButton;
         private System.Windows.Forms.Button YesButton;
     }
