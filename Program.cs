@@ -16,6 +16,9 @@ namespace UnicardSync
         [STAThread]
         static void Main()
         {
+            // SQLitePCL.rawのプロバイダをwinsqlite3に設定
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_winsqlite3());
+
             // SQLiteデータベースの初期化
             bool isNewDatabase = !File.Exists(DatabaseConfig.DBPath);
 
