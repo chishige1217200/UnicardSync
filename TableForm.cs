@@ -245,6 +245,7 @@ namespace UnicardSync
                                  meisai.Amount,
                                  meisai.Date,
                                  meisai.Note,
+                                 meisai.TorikomiID,
                                  torikomi.FileName,
                                  torikomi.TorikomiType
                              };
@@ -259,6 +260,7 @@ namespace UnicardSync
                     Amount = item.Amount,
                     Date = item.Date,
                     Note = item.Note,
+                    torikomiID = (int)item.TorikomiID,
                     FileName = item.FileName,
                     TorikomiType = item.TorikomiType
                 });
@@ -373,6 +375,7 @@ namespace UnicardSync
                     item.Amount,              // 金額
                     item.Date,                // 利用日
                     item.Note,                // 備考
+                    item.torikomiID,          // 取込ID
                     item.TorikomiType,        // 取込区分
                     item.FileName             // ファイル名
                 );
@@ -382,10 +385,11 @@ namespace UnicardSync
             var sum = joinedData.Sum(x => x.Amount);
             dt.Rows.Add(
                 DBNull.Value,              // 明細番号
-                "【合計】",                 // 利用先
+                "【合計】",                // 利用先
                 sum,                       // 金額
                 DBNull.Value,              // 利用日
                 DBNull.Value,              // 備考
+                DBNull.Value,              // 取込ID
                 DBNull.Value,              // 取込区分
                 DBNull.Value               // ファイル名
             );
@@ -583,6 +587,7 @@ namespace UnicardSync
         public long Amount { get; set; }
         public DateTime Date { get; set; }
         public string Note { get; set; }
+        public int torikomiID { get; set; }
         public string TorikomiType { get; set; }
         public string FileName { get; set; }
     }

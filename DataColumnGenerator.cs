@@ -19,6 +19,7 @@ namespace UnicardSync
             dt.Columns.Add("金額", typeof(long));             // MeisaiData.Amount
             dt.Columns.Add("利用日", typeof(DateTime));       // MeisaiData.Date
             dt.Columns.Add("備考", typeof(string));           // MeisaiData.Note
+            dt.Columns.Add("取込番号", typeof(int));          // MeisaiData.torikomiID
             dt.Columns.Add("取込区分", typeof(string));       // TorikomiData.TorikomiType
             dt.Columns.Add("ファイル名", typeof(string));     // TorikomiData.FileName
         }
