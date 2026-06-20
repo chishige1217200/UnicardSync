@@ -72,9 +72,9 @@
             this.label1.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(57, 12);
+            this.label1.Size = new System.Drawing.Size(88, 12);
             this.label1.TabIndex = 4;
-            this.label1.Text = "取込対象";
+            this.label1.Text = "取込対象データ";
             // 
             // label2
             // 
@@ -82,9 +82,9 @@
             this.label2.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label2.Location = new System.Drawing.Point(652, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 12);
+            this.label2.Size = new System.Drawing.Size(75, 12);
             this.label2.TabIndex = 5;
-            this.label2.Text = "比較対象";
+            this.label2.Text = "取込済データ";
             // 
             // ConfirmCompare
             // 

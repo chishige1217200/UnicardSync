@@ -25,6 +25,8 @@ namespace UnicardSync
         {
             InitializeComponent();
 
+            this.Text += "（ファイル名：" + torikomiData.FileName + "）";
+
             DataTable dt = new DataTable("取込対象");
             DataColumnGenerator.AddConfirmDataColumns(dt, true);
 
@@ -76,7 +78,7 @@ namespace UnicardSync
                 confirmCompare.Table.Columns["利用日"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
                 CreateOldDataTable(torikomiHistoryIDList);
-                this.label1.Text = "過去に同じ内容を取り込んだ可能性があります。" + this.label1.Text;
+                this.label1.Text = "過去に同じ内容（ファイル名：" + torikomiData.FileName + "）を取り込んだ可能性があります。" + this.label1.Text;
             }
             else
             {
