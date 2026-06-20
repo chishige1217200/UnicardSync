@@ -245,6 +245,7 @@ namespace UnicardSync
                                  meisai.Amount,
                                  meisai.Date,
                                  meisai.Note,
+                                 meisai.TorikomiID,
                                  torikomi.FileName,
                                  torikomi.TorikomiType
                              };
@@ -259,6 +260,7 @@ namespace UnicardSync
                     Amount = item.Amount,
                     Date = item.Date,
                     Note = item.Note,
+                    torikomiID = (int)item.TorikomiID,
                     FileName = item.FileName,
                     TorikomiType = item.TorikomiType
                 });
@@ -373,6 +375,7 @@ namespace UnicardSync
                     item.Amount,              // 金額
                     item.Date,                // 利用日
                     item.Note,                // 備考
+                    item.torikomiID,          // 取込ID
                     item.TorikomiType,        // 取込区分
                     item.FileName             // ファイル名
                 );
@@ -382,10 +385,11 @@ namespace UnicardSync
             var sum = joinedData.Sum(x => x.Amount);
             dt.Rows.Add(
                 DBNull.Value,              // 明細番号
-                "【合計】",                 // 利用先
+                "【合計】",                // 利用先
                 sum,                       // 金額
                 DBNull.Value,              // 利用日
                 DBNull.Value,              // 備考
+                DBNull.Value,              // 取込ID
                 DBNull.Value,              // 取込区分
                 DBNull.Value               // ファイル名
             );
@@ -553,18 +557,30 @@ namespace UnicardSync
                 // 有効な取込明細行が無くなったら、取込履歴も論理削除する
                 if (count == 0)
                 {
+                    var selectCommand = connection.CreateCommand();
+                    selectCommand.CommandText = @"
+                        SELECT rec_ver
+                        FROM torikomi
+                        WHERE id = $id
+                          AND del_flag = 0;
+                    ";
+
+                    selectCommand.Parameters.AddWithValue("$id", meisaiData.TorikomiID);
+
+                    int recVer = selectCommand.ExecuteScalar() != null ? Convert.ToInt32(selectCommand.ExecuteScalar()) : 0;
+
                     var updateCommand = connection.CreateCommand();
                     updateCommand.CommandText = @"
-                    UPDATE torikomi
-                    SET del_flag = 1,
-                        upd_datetime = CURRENT_TIMESTAMP,
-                        rec_ver = rec_ver + 1
-                    WHERE id = $id
-                      AND rec_ver = $recVer
-                      AND del_flag = 0;
-                ";
+                        UPDATE torikomi
+                        SET del_flag = 1,
+                            upd_datetime = CURRENT_TIMESTAMP,
+                            rec_ver = rec_ver + 1
+                        WHERE id = $id
+                          AND rec_ver = $recVer
+                          AND del_flag = 0;
+                    ";
                     updateCommand.Parameters.AddWithValue("$id", meisaiData.TorikomiID);
-                    updateCommand.Parameters.AddWithValue("$recVer", meisaiData.RecVer);
+                    updateCommand.Parameters.AddWithValue("$recVer", recVer);
                     int updateCount = updateCommand.ExecuteNonQuery();
 
                     if (updateCount == 0)
@@ -583,6 +599,7 @@ namespace UnicardSync
         public long Amount { get; set; }
         public DateTime Date { get; set; }
         public string Note { get; set; }
+        public int torikomiID { get; set; }
         public string TorikomiType { get; set; }
         public string FileName { get; set; }
     }
