@@ -16,6 +16,9 @@ namespace UnicardSync
         [STAThread]
         static void Main()
         {
+            // SQLitePCLの初期化
+            SQLitePCL.Batteries.Init();
+
             // SQLiteデータベースの初期化
             bool isNewDatabase = !File.Exists(DatabaseConfig.DBPath);
 
