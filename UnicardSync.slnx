@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="UnicardSync.csproj" Id="008fa643-6c2b-48d6-88d7-c7a1833c7931">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+</Solution>
