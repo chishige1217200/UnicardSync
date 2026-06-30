@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -41,6 +42,7 @@ namespace UnicardSync
                 {
                     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                     {
+                        csv.Context.RegisterClassMap<UnicardSyncDataMap>();
                         csv.WriteRecords(outputRecords);
                     }
                 }
@@ -59,6 +61,19 @@ namespace UnicardSync
             public string Note { get; set; }
             public string FileName { get; set; }
             public string TorikomiType { get; set; }
+        }
+
+        private sealed class UnicardSyncDataMap : ClassMap<UnicardSyncData>
+        {
+            public UnicardSyncDataMap()
+            {
+                Map(m => m.Place);
+                Map(m => m.Amount);
+                Map(m => m.Date).TypeConverterOption.Format("yyyy/MM/dd");
+                Map(m => m.Note);
+                Map(m => m.FileName);
+                Map(m => m.TorikomiType);
+            }
         }
     }
 }
