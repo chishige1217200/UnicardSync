@@ -24,6 +24,10 @@ namespace UnicardSync
 
             typeof(DataGridView).InvokeMember("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty, null, Table, new object[] { true });
 
+            // フォームタイトルにバージョン情報を表示
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            this.Text = $"UnicardSync v{version.Major}.{version.Minor}.{version.Build}";
+
             // 取込区分コンボボックスの初期化
             TorikomiTypeComboBox.DataSource = TorikomiConfigHelper.Config;
             TorikomiTypeComboBox.DisplayMember = "torikomiType";
