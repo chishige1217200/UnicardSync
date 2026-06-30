@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("UnicardSync")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
+[assembly: AssemblyCopyright("Copyright © chishige1217200 2025-2026")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      ビルド番号
 //      リビジョン
 //
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.4.0")]
+[assembly: AssemblyFileVersion("1.0.4.0")]
